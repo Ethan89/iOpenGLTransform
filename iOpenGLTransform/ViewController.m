@@ -30,4 +30,32 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)xSliderValueChanged:(id)sender {
+    UISlider *xSlider = (UISlider *)sender;
+    float currentXValue = xSlider.value;
+    
+    [self.openGLView setXPos:currentXValue];
+}
+
+- (IBAction)ySliderValueChanged:(id)sender {
+    UISlider *ySlider = (UISlider *)sender;
+    float currentYValue = ySlider.value;
+    
+    [self.openGLView setYPos:currentYValue];
+}
+
+- (IBAction)zSliderValueChanged:(id)sender {
+    UISlider *zSlider = (UISlider *)sender;
+    float currentZValue = zSlider.value;
+    NSLog(@"zvalue: %f", currentZValue);
+    
+    [self.openGLView setZPos:currentZValue];
+}
+
+- (IBAction)resetButtonClicked:(id)sender {
+    [self.openGLView resetTransform];
+    [self.xPosSlider setValue:self.openGLView.xPos];
+    [self.yPosSlider setValue:self.openGLView.yPos];
+    [self.zPosSlider setValue:self.openGLView.zPos];
+}
 @end

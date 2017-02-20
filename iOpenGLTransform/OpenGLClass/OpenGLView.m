@@ -8,18 +8,42 @@
 
 #import "OpenGLView.h"
 #import "GLESUtils.h"
+#include "GLESMath.h"
 
 @interface OpenGLView ()
 
+@property (assign, nonatomic) KSMatrix4 modelViewMatrix;
+@property (assign, nonatomic) KSMatrix4 projectionMatrix;
+
 - (void)setupLayer;
 - (void)setupProgram;
+- (void)setupProjection;
+- (void)updateTransform;
 
 @end
 
 @implementation OpenGLView
 
+@synthesize xPos = _xPos;
+@synthesize yPos = _yPos;
+@synthesize zPos = _zPos;
+
 + (Class)layerClass {
     return [CAEAGLLayer class];
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self setupLayer];
+        [self setupContext];
+        [self setupProgram];
+        [self setupProjection];
+        
+        [self resetTransform];
+    }
+    
+    return self;
 }
 
 - (void)layoutSubviews {
@@ -31,10 +55,13 @@
     [self setupFrameBuffer];
     
     [self setupProgram];
+    [self setupProjection];
+    [self updateTransform];
     
     [self render];
 }
 
+// 设置CAEAGLLayer
 - (void)setupLayer {
     self.eaglLayer = (CAEAGLLayer *)self.layer;
     // CALayer 默认是全透明的，必须设为不透明，才能让其可见
@@ -47,9 +74,10 @@
                                           };
 }
 
+// 设置顶点着色器脚本与片元着色器脚本
 - (void)setupProgram {
     /*
-     * load shader
+     * 从glsl加载着色器
      */
     NSString *vertexShaderPath = [[NSBundle mainBundle] pathForResource:@"VertexShader"
                                                                 ofType:@"glsl"];
@@ -59,7 +87,7 @@
     GLuint vertexShader = [GLESUtils loadShader:GL_VERTEX_SHADER withFilePath:vertexShaderPath];
     GLuint fragmentShader = [GLESUtils loadShader:GL_FRAGMENT_SHADER withFilePath:fragmentShaderPath];
     
-    // create program, attach shaderes
+    // 创建脚本，并附加到着色器上
     self.programHandle = glCreateProgram();
     if (!self.programHandle) {
         NSLog(@"Failed to create program");
@@ -69,10 +97,10 @@
     glAttachShader(self.programHandle, vertexShader);
     glAttachShader(self.programHandle, fragmentShader);
     
-    // link program
+    // 连接脚本
     glLinkProgram(self.programHandle);
     
-    // check link status
+    // 检查着色器脚本的连接状态
     GLint linked;
     glGetProgramiv(self.programHandle, GL_LINK_STATUS, &linked);
     if (!linked) {
@@ -95,6 +123,34 @@
     
     // get attribute slot from program
     self.positionSlot = glGetAttribLocation(self.programHandle, "vPosition");
+    
+    // Get the uniform model-view matrix slot from program
+    self.modelViewSlot = glGetUniformLocation(self.programHandle, "modelView");
+    
+    // Get the uniform projection matrix slot from program
+    self.projectionSlot = glGetUniformLocation(self.programHandle, "projection");
+}
+
+// 设置透视
+// 生成一个视线角度为60度的透视矩阵
+- (void)setupProjection {
+    // 裁剪面的宽高比
+    float aspect = self.frame.size.width / self.frame.size.height;
+    
+    // GLESMath中的3D数学函数，用来指定矩阵重置为单位矩阵
+    ksMatrixLoadIdentity(&self->_projectionMatrix);
+    
+    // GLESMath中的3D数学函数，返回透视矩阵函数原型为：
+    // void ksPerspective(ksMatrix4 * result, float fovy, float aspect, float nearZ, float farZ);
+    // result 指定了输入矩阵。并在result中返回新的矩阵
+    // fovy 相机在 y 方向上的视线角度（介于 0 ~ 180 之间）
+    // aspect 屏蔽的宽高比
+    // nearZ 相机到近裁剪面的距离
+    // farZ 相机到元裁剪面的距离
+    ksPerspective(&self->_projectionMatrix, 60.f, aspect, 1.f, 20.f);
+    
+    // 指定矩阵重置为单位矩阵
+    glUniformMatrix4fv(self.projectionSlot, 1, GL_FALSE, (GLfloat *)&self->_projectionMatrix.m[0][0]);
 }
 
 - (void)setupContext {
@@ -111,6 +167,36 @@
         NSLog(@"Failed to set current OpenGL context");
         return;
     }
+}
+
+// 更新模型视图矩阵
+- (void)updateTransform {
+    // 生成一个模型视图矩阵，用来旋转/平移/缩放
+    ksMatrixLoadIdentity(&self->_modelViewMatrix);
+    
+    NSLog(@"x: %f, y: %f, z%f", self.xPos, self.yPos, self.zPos);
+    
+    // GLESMath中的函数，平移
+    ksTranslate(&self->_modelViewMatrix, self.xPos, self.yPos, self.zPos);
+    
+    // GLESMath中的函数，旋转
+    ksRotate(&self->_modelViewMatrix, 0.f, 1.f, 0.f, 0.f);
+    
+    // GLESMath中的函数，缩放
+    ksScale(&self->_modelViewMatrix, 1.f, 1.f, 1.f);
+    
+    // 加载模型视图
+    glUniformMatrix4fv(self.modelViewSlot, 1, GL_FALSE, (GLfloat *)&self->_modelViewMatrix.m[0][0]);
+}
+
+// 重置模型视图矩阵
+- (void)resetTransform {
+    
+    self.xPos = 0.f;
+    self.yPos = 0.f;
+    self.zPos = -5.5;
+    
+    [self updateTransform];
 }
 
 - (void)setupRenderBuffer {
@@ -149,7 +235,7 @@
      * void glFramebufferRenderbuffer (GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer)
      * 该函数是将相关 buffer（三大buffer之一）attach到framebuffer上（如果 renderbuffer不为 0，
      * 知道前面为什么说glGenRenderbuffers 返回的id 不会为 0 吧）或从 framebuffer上detach
-     * （如果 renderbuffer为 0）。参数 attachment 是指定 renderbuffer 被装配到那个装配点上，
+     * （如果 renderbuffer为 0）。参数 attachment 是指定 renderbuffer 被装配到那个装配点上，zm
      * 其值是GL_COLOR_ATTACHMENT0, GL_DEPTH_ATTACHMENT, GL_STENCIL_ATTACHMENT中的一个，
      * 分别对应 color，depth和 stencil三大buffer。
      */
@@ -163,6 +249,7 @@
     self.colorRenderBuffer = 0;
 }
 
+// 画一个四棱锥
 - (void)drawPyramid {
     // 四棱锥的四个顶点坐标
     GLfloat vertices[] = {
@@ -195,11 +282,16 @@
     glDrawElements(GL_LINES, sizeof(indices)/sizeof(GLubyte), GL_UNSIGNED_BYTE, indices);
 }
 
+// 画一个三角形
 - (void)drawTriangle {
     GLfloat vertices[] = {
         0.0f,  0.5f,  0.0f,
         -0.5f, -0.5f, 0.0f,
         0.5f,  -0.5f, 0.0f,
+    };
+    
+    GLubyte indices[] = {
+        0, 1, 1, 2, 2, 0
     };
     
     /*
@@ -210,7 +302,8 @@
     glEnableVertexAttribArray(self.positionSlot);
     
     // drae triangle
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+//    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_LINES, sizeof(indices)/sizeof(GLubyte), GL_UNSIGNED_BYTE, indices);
 }
 
 - (void)render {
@@ -232,7 +325,6 @@
     glViewport(0, 0, self.frame.size.width, self.frame.size.height);
     
     [self drawPyramid];
-
     
     /*
      * (BOOL)presentRenderbuffer:(NSUInteger)target 是将指定 renderbuffer 呈现在屏幕上，
@@ -246,4 +338,37 @@
     [self.context presentRenderbuffer:GL_RENDERBUFFER];
 }
 
+#pragma mark - getters and setters
+- (void)setXPos:(float)x {
+    _xPos = x;
+    
+    [self updateTransform];
+    [self render];
+}
+
+- (float)xPos {
+    return _xPos;
+}
+
+- (void)setYPos:(float)yPos {
+    _yPos = yPos;
+    
+    [self updateTransform];
+    [self render];
+}
+
+- (float)yPos {
+    return _yPos;
+}
+
+- (void)setZPos:(float)zPos {
+    _zPos = zPos;
+    
+    [self updateTransform];
+    [self render];
+}
+
+- (float)zPos {
+    return _zPos;
+}
 @end

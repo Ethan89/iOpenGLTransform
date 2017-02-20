@@ -15,9 +15,18 @@
 
 @property (strong, nonatomic) CAEAGLLayer *eaglLayer;
 @property (strong, nonatomic) EAGLContext *context;
+
 @property (nonatomic) GLuint colorRenderBuffer;
 @property (nonatomic) GLuint frameBuffer;
 @property (nonatomic) GLuint programHandle;
 @property (nonatomic) GLuint positionSlot;
+@property (nonatomic) GLuint modelViewSlot;
+@property (nonatomic) GLuint projectionSlot;
+
+@property (assign, nonatomic) float xPos;
+@property (assign, nonatomic) float yPos;
+@property (assign, nonatomic) float zPos;
+
+- (void)resetTransform;
 
 @end

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA2CAD2B1E56F6D4002A628C /* GLESMath.c in Sources */ = {isa = PBXBuildFile; fileRef = AA2CAD291E56F6D4002A628C /* GLESMath.c */; };
 		AA91E1421E5599B4006A6176 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AA91E1411E5599B4006A6176 /* main.m */; };
 		AA91E1451E5599B4006A6176 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AA91E1441E5599B4006A6176 /* AppDelegate.m */; };
 		AA91E1481E5599B4006A6176 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA91E1471E5599B4006A6176 /* ViewController.m */; };
@@ -22,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AA2CAD291E56F6D4002A628C /* GLESMath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GLESMath.c; sourceTree = "<group>"; };
+		AA2CAD2A1E56F6D4002A628C /* GLESMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLESMath.h; sourceTree = "<group>"; };
 		AA91E13D1E5599B4006A6176 /* iOpenGLTransform.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOpenGLTransform.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA91E1411E5599B4006A6176 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		AA91E1431E5599B4006A6176 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -115,6 +118,8 @@
 				AA91E15E1E55A7CA006A6176 /* GLESUtils.m */,
 				AA91E1601E55A7D4006A6176 /* OpenGLView.h */,
 				AA91E1611E55A7D4006A6176 /* OpenGLView.m */,
+				AA2CAD291E56F6D4002A628C /* GLESMath.c */,
+				AA2CAD2A1E56F6D4002A628C /* GLESMath.h */,
 			);
 			path = OpenGLClass;
 			sourceTree = "<group>";
@@ -150,7 +155,8 @@
 				TargetAttributes = {
 					AA91E13C1E5599B4006A6176 = {
 						CreatedOnToolsVersion = 8.2.1;
-						ProvisioningStyle = Automatic;
+						DevelopmentTeam = 685DPV4URE;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -196,6 +202,7 @@
 				AA91E1451E5599B4006A6176 /* AppDelegate.m in Sources */,
 				AA91E15F1E55A7CA006A6176 /* GLESUtils.m in Sources */,
 				AA91E1421E5599B4006A6176 /* main.m in Sources */,
+				AA2CAD2B1E56F6D4002A628C /* GLESMath.c in Sources */,
 				AA91E1621E55A7D4006A6176 /* OpenGLView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -314,11 +321,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 685DPV4URE;
 				INFOPLIST_FILE = iOpenGLTransform/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.bjdv.iOpenGLTransform;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "a6c21188-f315-4e62-a631-dc2820c3857a";
+				PROVISIONING_PROFILE_SPECIFIER = iOpenGLTransform_dev_profile;
 			};
 			name = Debug;
 		};
@@ -326,6 +336,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = iOpenGLTransform/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
