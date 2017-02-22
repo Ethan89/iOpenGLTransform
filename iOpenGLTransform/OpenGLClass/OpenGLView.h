@@ -26,6 +26,8 @@
 @property (assign, nonatomic) float xPos;
 @property (assign, nonatomic) float yPos;
 @property (assign, nonatomic) float zPos;
+@property (assign, nonatomic) float rotateX;
+@property (assign, nonatomic) float scaleZ;
 
 - (void)resetTransform;
 

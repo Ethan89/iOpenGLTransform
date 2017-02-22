@@ -24,9 +24,11 @@
 
 @implementation OpenGLView
 
-@synthesize xPos = _xPos;
-@synthesize yPos = _yPos;
-@synthesize zPos = _zPos;
+@synthesize xPos    = _xPos;
+@synthesize yPos    = _yPos;
+@synthesize zPos    = _zPos;
+@synthesize rotateX = _rotateX;
+@synthesize scaleZ  = _scaleZ;
 
 + (Class)layerClass {
     return [CAEAGLLayer class];
@@ -180,10 +182,10 @@
     ksTranslate(&self->_modelViewMatrix, self.xPos, self.yPos, self.zPos);
     
     // GLESMath中的函数，旋转
-    ksRotate(&self->_modelViewMatrix, 0.f, 1.f, 0.f, 0.f);
+    ksRotate(&self->_modelViewMatrix, self.rotateX, 1.f, 0.f, 0.f);
     
     // GLESMath中的函数，缩放
-    ksScale(&self->_modelViewMatrix, 1.f, 1.f, 1.f);
+    ksScale(&self->_modelViewMatrix, 1.f, 1.f, self.scaleZ);
     
     // 加载模型视图
     glUniformMatrix4fv(self.modelViewSlot, 1, GL_FALSE, (GLfloat *)&self->_modelViewMatrix.m[0][0]);
@@ -195,6 +197,8 @@
     self.xPos = 0.f;
     self.yPos = 0.f;
     self.zPos = -5.5;
+    self.rotateX = 0.f;
+    self.scaleZ = 1.f;
     
     [self updateTransform];
 }
@@ -370,5 +374,27 @@
 
 - (float)zPos {
     return _zPos;
+}
+
+- (void)setRotateX:(float)rotateX {
+    _rotateX = rotateX;
+    
+    [self updateTransform];
+    [self render];
+}
+
+- (float)rotateX {
+    return _rotateX;
+}
+
+- (void)setScaleZ:(float)scaleZ {
+    _scaleZ = scaleZ;
+    
+    [self updateTransform];
+    [self render];
+}
+
+- (float)scaleZ {
+    return _scaleZ;
 }
 @end
