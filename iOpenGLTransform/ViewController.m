@@ -47,7 +47,6 @@
 - (IBAction)zSliderValueChanged:(id)sender {
     UISlider *zSlider = (UISlider *)sender;
     float currentZValue = zSlider.value;
-    NSLog(@"zvalue: %f", currentZValue);
     
     [self.openGLView setZPos:currentZValue];
 }
@@ -57,5 +56,21 @@
     [self.xPosSlider setValue:self.openGLView.xPos];
     [self.yPosSlider setValue:self.openGLView.yPos];
     [self.zPosSlider setValue:self.openGLView.zPos];
+    [self.rotateXSlider setValue:self.openGLView.rotateX];
+    [self.scaleZSlider setValue:self.openGLView.scaleZ];
+}
+
+- (IBAction)totateXSliderValueChanged:(id)sender {
+    UISlider *slider = (UISlider *)sender;
+    float currentRoateXValue = slider.value;
+    
+    [self.openGLView setRotateX:currentRoateXValue];
+}
+
+- (IBAction)scaleZSliderValueChanged:(id)sender {
+    UISlider *slider = (UISlider *)sender;
+    float currentScaleZValue = slider.value;
+    
+    [self.openGLView setScaleZ:currentScaleZValue];
 }
 @end

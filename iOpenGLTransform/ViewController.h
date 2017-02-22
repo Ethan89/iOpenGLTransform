@@ -18,10 +18,15 @@
 @property (weak, nonatomic) IBOutlet UISlider *xPosSlider;
 @property (weak, nonatomic) IBOutlet UISlider *yPosSlider;
 @property (weak, nonatomic) IBOutlet UISlider *zPosSlider;
+@property (weak, nonatomic) IBOutlet UISlider *rotateXSlider;
+@property (weak, nonatomic) IBOutlet UISlider *scaleZSlider;
 
 - (IBAction)xSliderValueChanged:(id)sender;
 - (IBAction)ySliderValueChanged:(id)sender;
 - (IBAction)zSliderValueChanged:(id)sender;
 - (IBAction)resetButtonClicked:(id)sender;
+- (IBAction)totateXSliderValueChanged:(id)sender;
+- (IBAction)scaleZSliderValueChanged:(id)sender;
+
 @end
 
