@@ -25,6 +25,7 @@
 - (IBAction)ySliderValueChanged:(id)sender;
 - (IBAction)zSliderValueChanged:(id)sender;
 - (IBAction)resetButtonClicked:(id)sender;
+- (IBAction)autoButtonClicked:(id)sender;
 - (IBAction)totateXSliderValueChanged:(id)sender;
 - (IBAction)scaleZSliderValueChanged:(id)sender;
 

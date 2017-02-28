@@ -135,6 +135,13 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0sr-8e-Ow6">
+                                        <rect key="frame" x="249" y="92" width="32" height="30"/>
+                                        <state key="normal" title="Auto"/>
+                                        <connections>
+                                            <action selector="autoButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="NIg-z6-tLe"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -152,8 +159,10 @@
                                     <constraint firstItem="Bu8-y4-M14" firstAttribute="centerY" secondItem="sSq-LF-j9I" secondAttribute="centerY" id="VrS-rF-KRm"/>
                                     <constraint firstAttribute="trailing" secondItem="EFh-7v-Wgb" secondAttribute="trailing" constant="30" id="Wdh-MZ-itG"/>
                                     <constraint firstItem="ah8-Ms-4Yi" firstAttribute="leading" secondItem="N8B-VB-ni0" secondAttribute="trailing" constant="10" id="X7T-Qk-l7a"/>
+                                    <constraint firstItem="EFh-7v-Wgb" firstAttribute="leading" secondItem="0sr-8e-Ow6" secondAttribute="trailing" constant="25" id="XKS-Vn-2nx"/>
                                     <constraint firstItem="vGt-Qe-5PZ" firstAttribute="leading" secondItem="sSq-LF-j9I" secondAttribute="trailing" constant="10" id="f7t-Js-z2n"/>
                                     <constraint firstAttribute="trailing" secondItem="5Su-n8-Ova" secondAttribute="trailing" constant="10" id="flk-OA-oUs"/>
+                                    <constraint firstItem="0sr-8e-Ow6" firstAttribute="centerY" secondItem="Xud-vf-ffB" secondAttribute="centerY" id="hrA-vo-fGg"/>
                                     <constraint firstItem="dn4-xa-nK4" firstAttribute="centerY" secondItem="N8B-VB-ni0" secondAttribute="centerY" id="mFO-1J-phS"/>
                                     <constraint firstItem="5Su-n8-Ova" firstAttribute="centerY" secondItem="N8B-VB-ni0" secondAttribute="centerY" id="nZW-z1-OOm"/>
                                     <constraint firstItem="5Su-n8-Ova" firstAttribute="leading" secondItem="dn4-xa-nK4" secondAttribute="trailing" constant="10" id="rcf-UE-j0P"/>

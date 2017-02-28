@@ -12,6 +12,8 @@
 
 @interface OpenGLView ()
 
+@property (strong, nonatomic) CADisplayLink *displayLink;
+
 @property (assign, nonatomic) KSMatrix4 modelViewMatrix;
 @property (assign, nonatomic) KSMatrix4 projectionMatrix;
 
@@ -194,6 +196,11 @@
 // 重置模型视图矩阵
 - (void)resetTransform {
     
+    if (self.displayLink) {
+        [self.displayLink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        self.displayLink = nil;
+    }
+    
     self.xPos = 0.f;
     self.yPos = 0.f;
     self.zPos = -5.5;
@@ -340,6 +347,21 @@
      * 我们才设置 kEAGLDrawablePropertyRetainedBacking  为 TRUE。
      */
     [self.context presentRenderbuffer:GL_RENDERBUFFER];
+}
+
+- (void)displayLinkCallBack:(CADisplayLink *)displayLink {
+    self.rotateX += displayLink.duration * 90;
+}
+
+- (void)toggleDisplayLink {
+    if (self.displayLink == nil) {
+        self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(displayLinkCallBack:)];
+        [self.displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    } else {
+        [self.displayLink invalidate];
+        [self.displayLink removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        self.displayLink = nil;
+    }
 }
 
 #pragma mark - getters and setters

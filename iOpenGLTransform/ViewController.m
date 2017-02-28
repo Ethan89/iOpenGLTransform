@@ -60,6 +60,10 @@
     [self.scaleZSlider setValue:self.openGLView.scaleZ];
 }
 
+- (IBAction)autoButtonClicked:(id)sender {
+    [self.openGLView toggleDisplayLink];
+}
+
 - (IBAction)totateXSliderValueChanged:(id)sender {
     UISlider *slider = (UISlider *)sender;
     float currentRoateXValue = slider.value;

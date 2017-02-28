@@ -30,5 +30,6 @@
 @property (assign, nonatomic) float scaleZ;
 
 - (void)resetTransform;
+- (void)toggleDisplayLink;
 
 @end
